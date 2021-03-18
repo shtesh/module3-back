@@ -14,22 +14,29 @@ exports.createDailyGoal = async (req, res) => {
 };
 
 exports.updateDailyGoal = async (req, res) => {
-  const { userId } = req.session;
-  const { date, ...rest } = req.body;
-  const newMeal = await Meal.create(rest);
-  const dailyGoal = await DailyGoal.findOne({ date, user: userId });
-  const totalCalories = Number(dailyGoal.currentCalories) = Number(rest.calories)
-  const updateDailyGoal = await DailyGoal.findByIdAndUpdate(dailyGoal._id, 
-    {
-      $push: { meals: newMeal._id },
-      currentCalories: totalCalories,
-    },{ new: true });
-  res.status(200).json(updateDailyGoal);
+  try {
+    const { dailyGoal: dailyGoalId } = req.params;
+    const { date, ...rest } = req.body;
+    const newMeal = await Meal.create(rest);
+    const dailyGoal = await DailyGoal.findById(dailyGoalId);
+    const totalCalories =
+      Number(dailyGoal.currentCalories) + Number(rest?.calories || 0);
+    const updatedDailyGoal = await DailyGoal.findByIdAndUpdate(
+      dailyGoal,
+      {
+        $push: { meals: newMeal._id },
+        currentCalories: totalCalories,
+      },
+      { new: true }
+    );
+
+    return res.status(200).json(updatedDailyGoal);
+  } catch (e) {
+    return res.status(500).json({ e });
+  }
 };
 
 exports.deleteDailyGoal = async (req, res) => {
   await DailyGoal.findByIdAndDelete(req.params.dailyGoal);
-  res.status(200).json({ message: "daily goal has been deleted"});
+  res.status(200).json({ message: "daily goal has been deleted" });
 };
-
-
