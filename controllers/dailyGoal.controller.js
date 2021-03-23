@@ -2,9 +2,15 @@ const DailyGoal = require("../model/dailyGoal.model");
 const Meal = require("../model/meal.model");
 
 exports.getDailyGoal = async (req, res) => {
+  console.log(req.params)
   const dailyGoal = await DailyGoal.findById(req.params.dailyGoal);
+  
   res.status(200).json(dailyGoal);
 };
+exports.getDailyGoals = async (req, res) => {
+  const dailyGoals = await DailyGoal.find().lean();
+  res.status(200).json(dailyGoals);
+}
 
 exports.createDailyGoal = async (req, res) => {
   const { userId } = req.session;
