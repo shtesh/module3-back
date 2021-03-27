@@ -3,9 +3,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const origin = process.env.PUBLIC_DOMAIN;
-const corsConfig = { 
-  origin: [origin], 
-  credentials: true };
+const corsConfig = {
+  origin,
+  credentials: true,
+};
 
 module.exports = (app) => {
   app.use(cors(corsConfig));
