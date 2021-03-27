@@ -38,6 +38,7 @@ exports.updateDailyGoal = async (req, res) => {
     const { dailyGoal: dailyGoalId } = req.params;
     const { date, ...rest } = req.body;
     const newMeal = await Meal.create(rest);
+    const dailyGoal = await DailyGoal.findById(dailyGoalId);
     const totalCalories =
       Number(dailyGoal.currentCalories) + Number(rest?.calories || 0);
 
