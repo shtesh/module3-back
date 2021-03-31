@@ -3,7 +3,9 @@ const Meal = require("../model/meal.model");
 
 exports.getDailyGoal = async (req, res) => {
   try {
-    const dailyGoal = await DailyGoal.findById(req.params.dailyGoal).lean();
+    const dailyGoal = await DailyGoal.findById(req.params.dailyGoal)
+      .populate("meals")
+      .lean();
     return res.status(200).json(dailyGoal);
   } catch (e) {
     return res.status(400).json(e);
